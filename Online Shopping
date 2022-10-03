@@ -1,0 +1,197 @@
+#include "iostream"
+using namespace std;
+
+class Page{
+public:
+    int currentID=0;
+    int currentUserAmount=0;
+    int locate=0;
+    string username[100];
+    string upassword[100];
+    int amount[100]; 
+
+    Page(){
+        cout<<"Welcome to our Girl Secret!"<<endl;
+
+    }
+
+    int reGister();
+    int login();
+    int mainMenu();
+    int allInfo();
+    int exchange();
+    int toTransfer(int currentID,int receiverID,int toTransferAmount);
+    int toCheckUserName(string toTransferName);
+    int updateAmount(int toupdateAmount);
+};
+
+int Page::reGister() {
+    string name;
+    string password;
+    string password2;
+    
+    cout<<"This is from registration"<<endl;
+    cout<<"Enter your name to register:";
+    cin>>name;
+    cout<<"Enter your password to register:";
+    cin>>password;
+    cout<<"Confirm password to register:";
+    cin>>password2;
+    
+    if(password == password2){
+
+        username[locate] = name ;
+        upassword[locate] = password;
+
+
+        cout<<"Registration Success!"<<endl;
+        locate++;
+        allInfo();
+    }
+}
+
+int Page::login() {
+    string lusername;
+    string lpassword;
+    
+    cout<<"This is from Login"<<endl;
+    cout<<"Enter username to login:";
+    cin>>lusername;
+    cout<<"Enter pass to login for"<<lusername;
+    cin>>lpassword;
+
+    for(int i=0; i<=locate ; i++){
+        if(lusername == username[i] && lpassword== upassword[i]){
+            currentID = i;
+            
+            cout<<"Login Success"<<endl;
+            exchange();
+
+        }
+    }
+    return 100;
+}
+
+int Page::exchange(){
+    string toTransferName;
+    int toTransferAmount;
+    int userAmount=0;
+
+    int exchangeOption=0;
+    cout<<"Press 1 to Transfer:"<<endl;
+    cout<<"Press 2 to Update:"<<endl;
+    cout<<"Press 3 to Quit:"<<endl;
+    
+    cin>>exchangeOption;
+    
+    if(exchangeOption==1){
+        cout<<"Enter name to transfer:";
+        cin>>toTransferName;
+        int receiverID = toCheckUserName(toTransferName);
+
+        if(receiverID){
+            while (receiverID){
+
+                cout<<"Enter amount to Transfer:";
+                cin>>toTransferAmount;
+                
+                cout<<"Transfer successful! Trnsfer monery is "<<toTransferAmount<<endl;
+                
+                allInfo();
+                exchange();
+
+            }
+
+        } else{
+            cout<<"Name is not exit in our DB:"<<endl;
+            exchange();
+        }
+
+    } else if(exchangeOption==2){
+        int toupdateAmount=0;
+        cout<<"This is Update Option"<<endl;
+        cout<<"Enter amount to Update for :"<<username[currentID];
+        cin>>toupdateAmount;
+        updateAmount(toupdateAmount);
+        allInfo();
+        exchange();
+
+    } else if(exchangeOption==3){
+        
+        login();
+
+    }else{
+        cout<<"Invalid Option"<<endl;
+        exchange();
+    }
+}
+
+
+int Page::updateAmount(int toupdateAmount){
+    amount[currentID] = amount[currentID] + toupdateAmount;
+
+}
+
+
+int Page::toTransfer(int currentID,int receiverID,int toTransferAmount){
+    amount[currentID]=amount[currentID]-toTransferAmount;
+    amount[receiverID]=amount[receiverID] + toTransferAmount;
+    cout<<"Money Successfully Transferred to : "<<username[receiverID]<<endl;
+    cout<<"Transferred Amount: "<<toTransferAmount<<endl;
+}
+
+
+int Page::toCheckUserName(string toTransferName){
+
+    for(int i =0 ; i<=locate ; i++){
+        if(toTransferName == username[i]){
+            return i;
+        }
+    }
+}
+
+int Page::mainMenu(){
+    int option=10;
+    while (true){
+        cout<<"Press 1 to Register;"<<endl;
+        cout<<"Press 2 to Login"<<endl;
+        cout<<"Press 3 to Quit"<<endl;
+        cin>>option;
+        if(option == 1){
+            
+            reGister();
+        } else if(option == 2){
+           
+            int status=login();
+            if(status == 100){
+                cout<<"Try again"<<endl;
+            }
+        } else{
+            cout<<"bye bye"<<endl;
+            return 0;
+        }
+    }
+}
+
+int Page::allInfo() {
+    cout<<"Username"<<endl;
+    for(int i=0; i<=locate ; i++){
+        cout<<"   "<<username[i]<<endl;
+    }
+
+    cout<<"Password"<<endl;
+    for(int i=0; i<=locate ; i++){
+        cout<<"   "<<upassword[i]<<endl;
+    }
+    
+    
+}
+
+int main(){
+
+    Page _obj;
+    int ex=_obj.mainMenu();
+    if(ex == 0){
+        exit(1);
+    }
+}
